@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration</title>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+.card{
+background:#fff;
+padding:25px;
+border-radius:12px;
+width:90%;
+max-width:400px;
+}
+h2{
+text-align:center;
+}
+input,select,button{
+width:100%;
+padding:12px;
+margin:10px 0;
+font-size:16px;
+box-sizing:border-box;
+}
+button{
+background:#25D366;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Register</h2>
+
+<form action="/register" method="POST">
+
+<input
+type="text"
+name="name"
+placeholder="Full Name"
+required>
+
+<input
+type="tel"
+name="phone"
+placeholder="Phone Number"
+required>
+
+<input
+type="number"
+name="age"
+placeholder="Age"
+required>
+
+<select name="gender">
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
+
+<button type="submit">
+Continue to WhatsApp
+</button>
+
+</form>
+
+</div>
+
+</body>

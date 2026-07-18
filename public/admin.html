@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:20px;
+}
+h2{
+text-align:center;
+}
+table{
+width:100%;
+border-collapse:collapse;
+background:#fff;
+}
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:left;
+}
+th{
+background:#25D366;
+color:#fff;
+}
+</style>
+</head>
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>Age</th>
+<th>Gender</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody id="rows"></tbody>
+</table>
+
+<script>
+fetch("/api/registrations")
+.then(r => r.json())
+.then(data => {
+const rows = document.getElementById("rows");
+
+data.forEach(user => {
+rows.innerHTML += `
+<tr>
+<td>${user.name}</td>
+<td>${user.phone}</td>
+<td>${user.age}</td>
+<td>${user.gender}</td>
+<td>${user.date}</td>
+</tr>`;
+});
+});
+</script>
+
+</body>
+</html>
