@@ -43,7 +43,7 @@ cursor:pointer;
 <body>
 
 <div class="card">
-<h2>Register</h2>
+<h2>Loan Registration</h2>
 
 <form action="/register" method="POST">
 
@@ -65,13 +65,30 @@ name="age"
 placeholder="Age"
 required>
 
-<select name="gender">
+<select name="loanAmount" required>
+<option value="">Select Loan Amount</option>
+<option value="500">$500</option>
+<option value="1000">$1000</option>
+<option value="2000">$2000</option>
+<option value="2500">$2500</option>
+<option value="3500">$3500</option>
+</select>
+
+<select name="gender" required>
+<option value="">Select Gender</option>
 <option value="Male">Male</option>
 <option value="Female">Female</option>
 </select>
 
+<select name="duration" required>
+<option value="12">12 Months</option>
+</select>
+
+<label>Interest Rate</label>
+<input type="text" name="interest" value="0.1%" readonly>
+
 <button type="submit">
-Continue to WhatsApp
+Submit Registration
 </button>
 
 </form>
