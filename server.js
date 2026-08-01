@@ -1,15 +1,10 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, "database.json");
-
-// Telegram settings
-const BOT_TOKEN = "8895411616:AAG8Zr3U4n573hc6kP_4MDUsasyZ7WS80EM";
-const CHAT_ID = "8565817118";
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -20,7 +15,7 @@ app.get("/api/registrations", (req, res) => {
   res.json(data);
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", (req, res) => {
   const data = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
 
   data.push({
@@ -32,42 +27,52 @@ app.post("/register", async (req, res) => {
     duration: req.body.duration,
     interestRate: "0.1%",
     date: new Date().toLocaleString()
-});
+  });
 
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 
-  const message =
-`📋 New Loan Registration
-
-Name: ${req.body.name}
-📞 Phone: ${req.body.phone}
-🎂 Age: ${req.body.age}
-💰 Loan Amount: $${req.body.loanAmount}
-📅 Duration: ${req.body.duration} Months
-📈 Interest Rate: 0.1%
-⚧ Gender: ${req.body.gender}
-🕒 Date: ${new Date().toLocaleString()}`
-
-  try {
-    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    chat_id: CHAT_ID,
-    text: message
-  })
-});
-
-const result = await response.text();
-console.log(result);
-
-res.send(result);
-} catch (err) {
-  console.error("TELEGRAM ERROR:", err);
-  res.status(500).send("ERROR: " + err.message);
-}
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Application Submitted</title>
+      <style>
+        body{
+          font-family:Arial,sans-serif;
+          background:#f5f5f5;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          height:100vh;
+          margin:0;
+        }
+        .card{
+          background:#fff;
+          padding:30px;
+          border-radius:10px;
+          text-align:center;
+          box-shadow:0 2px 10px rgba(0,0,0,.2);
+        }
+        a{
+          display:inline-block;
+          margin-top:20px;
+          background:#25D366;
+          color:#fff;
+          padding:10px 20px;
+          text-decoration:none;
+          border-radius:5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h2>✅ Application Submitted Successfully</h2>
+        <p>Your loan application has been received.</p>
+        <a href="/">Submit Another Application</a>
+      </div>
+    </body>
+    </html>
+  `);
 });
 
 const server = app.listen(PORT, "0.0.0.0", () => {
