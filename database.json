@@ -187,5 +187,16 @@
     "duration": "12",
     "interestRate": "0.1%",
     "date": "8/1/2026, 6:43:28 PM"
+  },
+  {
+    "name": "Kiptai ",
+    "phone": "0723542623",
+    "age": "23",
+    "gender": "Male",
+    "loanAmount": "500",
+    "duration": "12",
+    "interestRate": "0.1%",
+    "status": "Approved",
+    "date": "8/3/2026, 12:25:13 PM"
   }
 ]

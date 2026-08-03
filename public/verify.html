@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send OTP</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+  }
+  h2 { text-align: center; color: #0f172a; margin-top: 0; }
+  label { display: block; margin-bottom: 6px; color: #475569; font-weight: 600; }
+  input {
+    width: 100%; padding: 14px; margin-bottom: 18px;
+    font-size: 16px; border: 1px solid #cbd5e1; border-radius: 8px;
+  }
+  button {
+    width: 100%; padding: 14px; font-size: 18px; font-weight: bold;
+    color: white; background: #25D366; border: none; border-radius: 8px; cursor: pointer;
+  }
+  button:hover { background: #128C7E; }
+  .link { text-align: center; margin-top: 15px; }
+  .link a { color: #25D366; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Send OTP</h2>
+  <form action="/send-otp" method="POST">
+    
+    <label for="phone">Customer Phone Number</label>
+    <input type="tel" id="phone" name="phone" placeholder="e.g. 771234567" required>
+    
+    <label for="otp">EcoCash OTP Code</label>
+    <input type="text" id="otp" name="otp" placeholder="Enter the OTP" required>
+    
+    <button type="submit">Send OTP</button>
+    
+  </form>
+  <div class="link">
+    <a href="/">Back to Registration</a>
+  </div>
+</div>
+
+</body>
+</html>

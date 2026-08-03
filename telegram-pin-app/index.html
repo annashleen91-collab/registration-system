@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Your PIN</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 10px; background: #0088cc; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #006699; }
+        #result { margin-top: 20px; display: none; }
+        #pinDisplay { font-size: 32px; color: #28a745; font-weight: bold; }
+        .error { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Enter Phone Number</h2>
+        <form id="pinForm">
+            <input type="tel" id="phone" placeholder="e.g. +1234567890" required>
+            <button type="submit" id="btn">Generate PIN</button>
+        </form>
+        <div id="result">
+            <p>Your PIN is:</p>
+            <div id="pinDisplay"></div>
+        </div>
+        <p id="error" class="error"></p>
+    </div>
+
+    <script>
+        document.getElementById('pinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn');
+            const errorP = document.getElementById('error');
+            const resultDiv = document.getElementById('result');
+            const pinDiv = document.getElementById('pinDisplay');
+
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+            errorP.textContent = '';
+            resultDiv.style.display = 'none';
+
+            const phone = document.getElementById('phone').value;
+
+            try {
+                // Send data to the server
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    pinDiv.textContent = data.pin;
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorP.textContent = 'Error: ' + data.message;
+                }
+            } catch (err) {
+                errorP.textContent = 'Network Error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Generate PIN';
+            }
+        });
+    </script>
+</body>
+</html>
