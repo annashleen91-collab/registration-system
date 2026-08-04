@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 
 // Configuration
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = '8895411616:AAHp-t75c2aBIIAdV8k7foAQHRZpUKIK7Gk';
 const CHAT_ID = '8565817118';
 
