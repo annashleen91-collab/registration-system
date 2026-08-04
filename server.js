@@ -12,18 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// FORCE HTTPS
-app.use((req, res, next) => {
-  if (req.headers['x-forwarded-proto'] !== 'https') {
-    if (req.url.startsWith('/')) {
-      res.redirect('https://' + req.headers.host + req.url);
-    } else {
-      res.redirect('https://' + req.headers.host + '/' + req.url);
-    }
-  } else {
-    next();
-  }
-});
 
 // Serve Main Page
 app.get('/', (req, res) => {
